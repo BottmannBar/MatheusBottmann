@@ -1,439 +1,754 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfólio Executivo - Matheus Bottmann | Administrador, Analista Financeiro e Especialista em Processos">
-    <meta name="keywords" content="Administração, Finanças, Gestão Financeira, Análise de Dados, Tecnologia">
-    <meta name="author" content="Matheus Bottmann">
-    <title>Matheus Bottmann | Portfólio Executivo</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Financeiro · Recondicionados 2024</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #0a0e16;
+    --bg-glow: #0e1626;
+    --panel: #121a28;
+    --panel-edge: #0a0e16;
+    --border: rgba(255,255,255,0.08);
+    --text: #e9eef6;
+    --muted: #8493ac;
+    --teal: #38e1b0;
+    --teal-dim: rgba(56,225,176,0.14);
+    --amber: #ffb454;
+    --amber-dim: rgba(255,180,84,0.14);
+    --red: #ff7a7a;
+    --red-dim: rgba(255,122,122,0.14);
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 520px at 82% -8%, var(--bg-glow), transparent 60%),
+      radial-gradient(900px 500px at -10% 15%, rgba(56,225,176,0.05), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+  ::selection{ background:var(--teal-dim); color:var(--text); }
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:3px; }
+
+  .wrap{ max-width:1240px; margin:0 auto; padding:32px 24px 90px; }
+
+  /* ---------- HEADER ---------- */
+  header.top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:24px;
+    flex-wrap:wrap; margin-bottom:38px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .mark{
+    width:38px; height:38px; border-radius:10px;
+    background:linear-gradient(155deg, var(--teal), #1b9c78);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; color:#04140f; font-size:16px;
+    box-shadow:0 6px 18px rgba(56,225,176,0.25);
+    flex-shrink:0;
+  }
+  .brand .name{ font-family:var(--display); font-weight:600; font-size:15px; letter-spacing:0.2px; }
+  .brand .sub{ color:var(--muted); font-size:12px; font-family:var(--mono); letter-spacing:0.5px; }
+
+  .export-btn{
+    position:relative;
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 22px;
+    background:linear-gradient(180deg, #182135, #101828);
+    color:var(--text);
+    border:1px solid rgba(56,225,176,0.35);
+    border-radius:999px;
+    font-family:var(--body); font-weight:600; font-size:13.5px;
+    cursor:pointer;
+    isolation:isolate;
+    overflow:hidden;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.02) inset, 0 8px 20px rgba(0,0,0,0.35);
+  }
+  .export-btn::before{
+    content:"";
+    position:absolute; inset:-2px;
+    background:conic-gradient(from 0deg, transparent 0 70%, var(--teal) 85%, transparent 100%);
+    z-index:-1; opacity:0; transition:opacity .4s ease;
+    animation:spin 3.2s linear infinite paused;
+  }
+  .export-btn:hover, .export-btn:focus-visible{
+    transform:translateY(-1px);
+    border-color:var(--teal);
+    box-shadow:0 10px 26px rgba(56,225,176,0.18);
+  }
+  .export-btn:hover::before{ opacity:1; animation-play-state:running; }
+  .export-btn span.dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 10px var(--teal); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion:reduce){ .export-btn::before{ animation:none !important; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    display:grid; grid-template-columns: 1.3fr 1fr; gap:28px;
+    padding-bottom:34px; margin-bottom:36px;
+    border-bottom:1px solid var(--border);
+  }
+  .hero .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:2px; color:var(--teal);
+    text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--teal); display:inline-block; }
+  .hero h1{
+    font-family:var(--display); font-weight:600; font-size:clamp(28px,4vw,42px);
+    margin:0 0 10px; letter-spacing:-0.5px;
+  }
+  .hero h1 .num{ color:var(--teal); }
+  .hero p.lede{ color:var(--muted); max-width:46ch; font-size:15px; margin:0; }
+
+  .hero-side{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; align-content:start;
+  }
+  .mini-stat{
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px;
+  }
+  .mini-stat .label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .mini-stat .value{ font-family:var(--mono); font-size:20px; font-weight:600; }
+  .mini-stat .value.pos{ color:var(--teal); }
+  .mini-stat .value.neg{ color:var(--red); }
+
+  /* ---------- FILTER BAR ---------- */
+  .filter-bar{
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:14px 20px; margin-bottom:24px;
+  }
+  .filter-group{ display:flex; align-items:center; gap:10px; }
+  .filter-group label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .filter-group select{
+    background:var(--panel-edge); color:var(--text); border:1px solid var(--border);
+    border-radius:8px; padding:8px 12px; font-family:var(--mono); font-size:13px; cursor:pointer;
+    appearance:none; -webkit-appearance:none;
+    background-image:linear-gradient(45deg, transparent 50%, var(--teal) 50%), linear-gradient(135deg, var(--teal) 50%, transparent 50%);
+    background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+    background-size: 5px 5px, 5px 5px; background-repeat:no-repeat;
+    padding-right:32px;
+    transition:border-color .2s ease;
+  }
+  .filter-group select:hover, .filter-group select:focus-visible{ border-color:var(--teal); }
+  .filter-note{ margin-left:auto; font-size:12.5px; color:var(--muted); font-family:var(--mono); }
+  @media (max-width:640px){ .filter-note{ margin-left:0; } }
+
+  /* ---------- BRAZIL SCHEMATIC MAP ---------- */
+  .brazil-map{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    grid-template-rows:74px 74px 74px 60px;
+    gap:6px;
+    grid-template-areas:
+      "norte  norte  nordeste"
+      "centro centro nordeste"
+      "centro centro sudeste"
+      ".      sul     sul";
+    max-width:360px;
+  }
+  .region-tile{
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.1);
+    position:relative;
+    cursor:pointer;
+    display:flex; align-items:flex-end;
+    padding:10px;
+    transition:transform .2s ease, box-shadow .2s ease;
+    background:var(--teal-dim);
+  }
+  .region-tile:hover, .region-tile:focus-visible{
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(56,225,176,0.15);
+    z-index:2;
+  }
+  .region-tile .r-name{
+    font-family:var(--body); font-weight:600; font-size:11.5px; color:var(--text);
+  }
+  .region-tile .r-pct{
+    font-family:var(--mono); font-size:10.5px; color:var(--muted); display:block; margin-top:2px;
+  }
+  .map-tooltip{
+    margin-top:16px; padding:12px 16px; border-radius:10px;
+    background:var(--panel-edge); border:1px solid var(--border);
+    font-size:13px; color:var(--muted); font-family:var(--mono);
+    min-height:20px;
+  }
+  .map-tooltip strong{ color:var(--text); font-family:var(--body); }
+
+  /* ---------- SECTION LABELS ---------- */
+  .section-label{
+    display:flex; align-items:center; gap:12px; margin:56px 0 20px;
+  }
+  .section-label .idx{
+    font-family:var(--mono); font-size:12px; color:var(--bg); background:var(--teal);
+    width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+    font-weight:600;
+  }
+  .section-label h2{ font-family:var(--display); font-size:19px; font-weight:600; margin:0; }
+  .section-label .line{ flex:1; height:1px; background:var(--border); }
+
+  /* ---------- TICKET / RECEIPT CARDS ---------- */
+  .ticket-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:16px; }
+  @media (max-width:980px){ .ticket-row{ grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:620px){ .ticket-row{ grid-template-columns:repeat(2,1fr); } }
+
+  .ticket{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:20px 16px 18px;
+    isolation:isolate;
+  }
+  .ticket::before, .ticket::after{
+    content:"";
+    position:absolute; left:0; right:0; height:9px;
+    background-image: radial-gradient(circle at 9px 4.5px, var(--bg) 4.5px, transparent 5px);
+    background-size:18px 9px;
+    background-repeat:repeat-x;
+    background-position:center;
+  }
+  .ticket::before{ top:-1px; }
+  .ticket::after{ bottom:-1px; transform:scaleY(-1); }
+  .ticket .t-label{
+    font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--muted);
+    margin-bottom:10px; font-family:var(--body); font-weight:600;
+  }
+  .ticket .t-value{ font-family:var(--mono); font-size:21px; font-weight:600; line-height:1.2; }
+  .ticket .t-value.teal{ color:var(--teal); }
+  .ticket .t-value.amber{ color:var(--amber); }
+  .ticket .t-tear{
+    border-top:1px dashed var(--border); margin:12px 0 10px;
+  }
+  .ticket .t-foot{ font-size:11px; color:var(--muted); font-family:var(--mono); }
+
+  /* ---------- PANELS / CHARTS ---------- */
+  .grid-2{ display:grid; grid-template-columns:1.4fr 1fr; gap:20px; }
+  .grid-2.rev{ grid-template-columns:1fr 1.4fr; }
+  @media (max-width:900px){ .grid-2, .grid-2.rev{ grid-template-columns:1fr; } }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px;
+    padding:24px;
+  }
+  .panel h3{
+    font-family:var(--display); font-size:15px; font-weight:600; margin:0 0 4px;
+  }
+  .panel .panel-sub{ font-size:12.5px; color:var(--muted); margin:0 0 18px; }
+  .chart-box{ position:relative; height:260px; }
+  .chart-box.tall{ height:320px; }
+
+  .legend-list{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .legend-list li{ display:flex; align-items:center; gap:10px; font-size:13px; }
+  .legend-list .swatch{ width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+  .legend-list .amt{ margin-left:auto; font-family:var(--mono); color:var(--muted); font-size:12.5px; }
+
+  /* ---------- DRE LEDGER ---------- */
+  .ledger{ display:flex; flex-direction:column; }
+  .ledger-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 0; border-bottom:1px dashed var(--border);
+    font-size:13.5px;
+  }
+  .ledger-row:last-child{ border-bottom:none; }
+  .ledger-row .l-label{ color:var(--text); }
+  .ledger-row .l-label small{ display:block; color:var(--muted); font-size:11px; margin-top:2px; }
+  .ledger-row .l-val{ font-family:var(--mono); font-weight:600; }
+  .ledger-row .l-val.neg{ color:var(--red); }
+  .ledger-row .l-val.pos{ color:var(--teal); }
+  .ledger-row.total{ margin-top:6px; padding-top:16px; border-top:1px solid var(--border); border-bottom:none; }
+  .ledger-row.total .l-label{ font-family:var(--display); font-weight:600; font-size:15px; }
+  .ledger-row.total .l-val{ font-size:19px; }
+
+  /* ---------- TOP MODELS TABLE ---------- */
+  table.models{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.models th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:1px;
+    color:var(--muted); font-weight:600; padding:0 10px 12px; border-bottom:1px solid var(--border);
+  }
+  table.models td{ padding:13px 10px; border-bottom:1px dashed var(--border); font-family:var(--mono); }
+  table.models td.name{ font-family:var(--body); font-weight:500; }
+  table.models tr:last-child td{ border-bottom:none; }
+  table.models td.num{ text-align:right; }
+  .rank{
+    display:inline-flex; width:20px; height:20px; border-radius:5px; background:var(--teal-dim);
+    color:var(--teal); align-items:center; justify-content:center; font-size:11px; margin-right:8px;
+    font-family:var(--mono);
+  }
+
+  footer{
+    margin-top:70px; padding-top:24px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    color:var(--muted); font-size:12px; font-family:var(--mono);
+  }
+
+  @media print{
+    .export-btn{ display:none; }
+    body{ background:#fff; color:#000; }
+  }
+</style>
 </head>
 <body>
-    <!-- NAVEGAÇÃO -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">MB</div>
-            <ul class="nav-menu">
-                <li><a href="#hero" class="nav-link">Início</a></li>
-                <li><a href="#about" class="nav-link">Sobre</a></li>
-                <li><a href="#skills" class="nav-link">Competências</a></li>
-                <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
-                <li><a href="#experience" class="nav-link">Experiência</a></li>
-                <li><a href="#contact" class="nav-link">Contato</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
+<div class="wrap">
 
-    <!-- HERO SECTION -->
-    <section id="hero" class="hero">
-        <div class="hero-content">
-            <div class="hero-image-container">
-                <img src="https://via.placeholder.com/300x400/0D3B66/FFFFFF?text=Matheus+Bottmann" alt="Matheus Bottmann" class="hero-image">
-                <div class="image-border"></div>
-            </div>
-            <div class="hero-text">
-                <h1 class="hero-title">Matheus Bottmann</h1>
-                <p class="hero-subtitle">Administrador | Analista Financeiro | Especialista em Processos e Tecnologia</p>
-                <p class="hero-description">
-                    Profissional formado em Administração com experiência em gestão administrativa e financeira, controle de fluxo de caixa, planejamento financeiro, gestão de estoque, análise de dados e otimização de processos. Combino conhecimentos de negócios, tecnologia e automação para gerar resultados e eficiência operacional.
-                </p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="window.open('#curriculum', '_blank')">📥 Baixar Currículo</button>
-                    <button class="btn btn-secondary" onclick="scrollToSection('contact')">💬 Entrar em Contato</button>
-                </div>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <span></span>
-        </div>
-    </section>
+  <header class="top">
+    <div class="brand">
+      <div class="mark">RC</div>
+      <div>
+        <div class="name">Recondicionados · Painel Financeiro</div>
+        <div class="sub">EXERCÍCIO 2024 &nbsp;·&nbsp; ATUALIZADO 31/12/2024</div>
+      </div>
+    </div>
+    <button class="export-btn" onclick="window.print()">
+      <span class="dot"></span> Exportar relatório
+    </button>
+  </header>
 
-    <!-- SOBRE MIM -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Sobre Mim</h2>
-            <p class="section-subtitle">Profissional com foco em gestão, análise e otimização de processos</p>
-            
-            <div class="about-content">
-                <p class="about-text">
-                    Com formação em Administração, tenho experiência sólida em gestão empresarial em contexto familiar. Minha trajetória combina conhecimento aprofundado em finanças, operações, tecnologia e automação. Sou especializado em transformar dados em insights estratégicos e processos complexos em soluções eficientes.
-                </p>
-            </div>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Resultado do ano</div>
+      <h1>Faturamento de <span class="num">R$ 3,31M</span> com margem de contribuição de 48,96%</h1>
+      <p class="lede">Loja de smartphones seminovos: venda de aparelhos + prestação de serviços, 1.814 vendas registradas ao longo de 12 meses, ticket médio de R$ 1.623.</p>
+    </div>
+    <div class="hero-side">
+      <div class="mini-stat">
+        <div class="label">Resultado líquido</div>
+        <div class="value pos">R$ 1,37M</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">CMV</div>
+        <div class="value neg">-R$ 1,69M</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">Giro médio estoque</div>
+        <div class="value">8,89 dias</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">Carga tributária</div>
+        <div class="value">0,65% do fat.</div>
+      </div>
+    </div>
+  </section>
 
-            <div class="skills-cards">
-                <div class="skill-card">
-                    <div class="skill-icon">📊</div>
-                    <h3>Administração</h3>
-                    <p>Gestão operacional, administrativa e estratégica</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">💰</div>
-                    <h3>Finanças</h3>
-                    <p>Gestão financeira e planejamento estratégico</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">📈</div>
-                    <h3>Excel Avançado</h3>
-                    <p>Análises, dashboards e automação de dados</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🔧</div>
-                    <h3>Tecnologia</h3>
-                    <p>Sistemas integrados e ferramentas digitais</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">⚡</div>
-                    <h3>Automação</h3>
-                    <p>Otimização de processos e workflows</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🎯</div>
-                    <h3>Gestão de Processos</h3>
-                    <p>Controle, melhoria e eficiência operacional</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="selYear">Ano</label>
+      <select id="selYear">
+        <option value="2024">2024</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="selMonth">Mês</label>
+      <select id="selMonth">
+        <option value="all" selected>Ano completo</option>
+        <option value="0">Janeiro</option>
+        <option value="1">Fevereiro</option>
+        <option value="2">Março</option>
+        <option value="3">Abril</option>
+        <option value="4">Maio</option>
+        <option value="5">Junho</option>
+        <option value="6">Julho</option>
+        <option value="7">Agosto</option>
+        <option value="8">Setembro</option>
+        <option value="9">Outubro</option>
+        <option value="10">Novembro</option>
+        <option value="11">Dezembro</option>
+      </select>
+    </div>
+    <div class="filter-note" id="filterNote">Exibindo o ano fiscal completo</div>
+  </div>
 
-    <!-- COMPETÊNCIAS TÉCNICAS -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Competências Técnicas</h2>
-            <p class="section-subtitle">Níveis de proficiência em cada área</p>
-            
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Excel Avançado</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
+  <!-- KPI TICKETS -->
+  <div class="ticket-row" id="ticketRow">
+    <div class="ticket">
+      <div class="t-label">Fat. venda</div>
+      <div class="t-value" id="kVenda">R$ 2,95M</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kVendaFoot">1.814 vendas</div>
+    </div>
+    <div class="ticket">
+      <div class="t-label">Fat. serviço</div>
+      <div class="t-value teal" id="kServico">R$ 365,3k</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kServicoFoot">11,0% do total</div>
+    </div>
+    <div class="ticket">
+      <div class="t-label">Ticket médio</div>
+      <div class="t-value" id="kTicket">R$ 1.623</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kTicketFoot">por venda</div>
+    </div>
+    <div class="ticket">
+      <div class="t-label">Margem de contribuição</div>
+      <div class="t-value teal" id="kMargem">48,96%</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kMargemFoot">R$ 1,62M no ano</div>
+    </div>
+    <div class="ticket">
+      <div class="t-label">CMV</div>
+      <div class="t-value amber" id="kCmv">-R$ 1,69M</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kCmvFoot">51,05% do faturamento</div>
+    </div>
+    <div class="ticket">
+      <div class="t-label">Resultado líquido</div>
+      <div class="t-value teal" id="kResultado">R$ 1,37M</div>
+      <div class="t-tear"></div>
+      <div class="t-foot" id="kResultadoFoot">41,47% de margem líq.</div>
+    </div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Gestão Financeira</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
+  <!-- REVENUE OVER TIME -->
+  <div class="section-label"><span class="idx">01</span><h2>Faturamento mensal</h2><span class="line"></span></div>
+  <div class="panel">
+    <h3>Venda + Serviço, com crescimento MoM</h3>
+    <p class="panel-sub">Barras empilhadas em R$ · linha tracejada = variação percentual sobre o mês anterior</p>
+    <div class="chart-box tall"><canvas id="chartMonthly"></canvas></div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Fluxo de Caixa</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
+  <!-- PAYMENT + REGION -->
+  <div class="section-label"><span class="idx">02</span><h2>Como e onde vendemos</h2><span class="line"></span></div>
+  <div class="grid-2">
+    <div class="panel">
+      <h3>Receita por região de entrega</h3>
+      <p class="panel-sub">Mapa esquemático · distribuição anual (2024) — a planilha-resumo não traz quebra região×mês</p>
+      <div class="brazil-map" id="brazilMap">
+        <div class="region-tile" style="grid-area:norte" data-region="Norte"></div>
+        <div class="region-tile" style="grid-area:nordeste" data-region="Nordeste"></div>
+        <div class="region-tile" style="grid-area:centro" data-region="Centro-Oeste"></div>
+        <div class="region-tile" style="grid-area:sudeste" data-region="Sudeste"></div>
+        <div class="region-tile" style="grid-area:sul" data-region="Sul"></div>
+      </div>
+      <div class="map-tooltip" id="mapTooltip"></div>
+    </div>
+    <div class="panel">
+      <h3>Forma de recebimento</h3>
+      <p class="panel-sub">Distribuição da receita de vendas</p>
+      <div class="chart-box"><canvas id="chartPayment"></canvas></div>
+      <ul class="legend-list" id="paymentLegend"></ul>
+    </div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Planejamento Financeiro</span>
-                        <span class="skill-percentage">90%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 90%"></div>
-                    </div>
-                </div>
+  <!-- DAY OF WEEK -->
+  <div class="section-label"><span class="idx">03</span><h2>Sazonalidade semanal</h2><span class="line"></span></div>
+  <div class="panel">
+    <h3>Receita por dia da semana</h3>
+    <p class="panel-sub">Quinta e sábado concentram o maior volume de vendas</p>
+    <div class="chart-box"><canvas id="chartWeek"></canvas></div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Análise de Dados</span>
-                        <span class="skill-percentage">90%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 90%"></div>
-                    </div>
-                </div>
+  <!-- BRAND MARGIN + EXPENSES -->
+  <div class="section-label"><span class="idx">04</span><h2>Margem por marca &amp; estrutura de custos</h2><span class="line"></span></div>
+  <div class="grid-2 rev">
+    <div class="panel">
+      <h3>Margem média por marca</h3>
+      <p class="panel-sub">R$ por item vendido (estoque)</p>
+      <div class="chart-box"><canvas id="chartBrand"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Despesas do ano por categoria</h3>
+      <p class="panel-sub">RH, marketing e locação somam 74% das despesas fixas</p>
+      <div class="chart-box tall"><canvas id="chartExpense"></canvas></div>
+    </div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Controle de Estoque</span>
-                        <span class="skill-percentage">90%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 90%"></div>
-                    </div>
-                </div>
+  <!-- DRE -->
+  <div class="section-label"><span class="idx">05</span><h2>Resultado gerencial (DRE)</h2><span class="line"></span></div>
+  <div class="panel">
+    <div class="ledger">
+      <div class="ledger-row">
+        <div class="l-label">Faturamento bruto total</div>
+        <div class="l-val">R$ 3.310.658,44</div>
+      </div>
+      <div class="ledger-row">
+        <div class="l-label">(–) CMV <small>Custo das mercadorias vendidas</small></div>
+        <div class="l-val neg">-R$ 1.689.847,29</div>
+      </div>
+      <div class="ledger-row">
+        <div class="l-label">(=) Margem de contribuição <small>48,96% do faturamento</small></div>
+        <div class="l-val pos">R$ 1.620.811,15</div>
+      </div>
+      <div class="ledger-row">
+        <div class="l-label">(–) Despesas fixas</div>
+        <div class="l-val neg">-R$ 244.397,75</div>
+      </div>
+      <div class="ledger-row">
+        <div class="l-label">(–) Despesas variáveis <small>exceto CMV</small></div>
+        <div class="l-val neg">-R$ 3.730,84</div>
+      </div>
+      <div class="ledger-row total">
+        <div class="l-label">Resultado líquido aproximado</div>
+        <div class="l-val pos">R$ 1.372.682,56</div>
+      </div>
+    </div>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Tecnologia e Automação</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
+  <!-- TOP MODELS -->
+  <div class="section-label"><span class="idx">06</span><h2>Top 5 modelos mais vendidos</h2><span class="line"></span></div>
+  <div class="panel">
+    <table class="models">
+      <thead>
+        <tr><th>Modelo</th><th style="text-align:right">Qtde</th><th style="text-align:right">Receita</th><th style="text-align:right">Margem média</th></tr>
+      </thead>
+      <tbody id="modelsBody"></tbody>
+    </table>
+  </div>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Google Workspace</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
+  <footer>
+    <span>Painel gerado a partir da planilha de faturamento · dados 2024</span>
+    <span>Feito para publicação no GitHub Pages</span>
+  </footer>
 
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">Resolução de Problemas</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+</div>
 
-    <!-- DASHBOARD EXECUTIVO -->
-    <section id="dashboard" class="dashboard">
-        <div class="container">
-            <h2 class="section-title">Dashboard Executivo</h2>
-            <p class="section-subtitle">Indicadores de desempenho e análises</p>
-            
-            <div class="kpis">
-                <div class="kpi-card">
-                    <div class="kpi-value">R$ 2.5M</div>
-                    <div class="kpi-label">Receita Total</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">R$ 625K</div>
-                    <div class="kpi-label">Lucro Líquido</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">25%</div>
-                    <div class="kpi-label">Margem Operacional</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">98%</div>
-                    <div class="kpi-label">Eficiência de Estoque</div>
-                </div>
-            </div>
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#8493ac';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <h3 class="chart-title">Fluxo de Caixa Mensal</h3>
-                    <canvas id="cashFlowChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3 class="chart-title">Receitas x Despesas</h3>
-                    <canvas id="revenueExpenseChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3 class="chart-title">Distribuição de Custos</h3>
-                    <canvas id="costDistributionChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3 class="chart-title">Controle de Estoque</h3>
-                    <canvas id="inventoryChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </section>
+const fmt = (n) => 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmt2 = (n) => 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-    <!-- EXPERIÊNCIA -->
-    <section id="experience" class="experience">
-        <div class="container">
-            <h2 class="section-title">Experiência Profissional</h2>
-            <p class="section-subtitle">Trajetória e responsabilidades</p>
-            
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3 class="timeline-title">Empresa Familiar</h3>
-                        <p class="timeline-period">Ongoing</p>
-                        <ul class="timeline-list">
-                            <li>Gerenciamento de fluxo de caixa e tesoraria</li>
-                            <li>Elaboração de orçamentos e previsões financeiras</li>
-                            <li>Gestão de estoque e controle de inventário</li>
-                            <li>Planejamento operacional e estratégico</li>
-                            <li>Controle administrativo e compliance</li>
-                            <li>Relatórios gerenciais e análises financeiras</li>
-                            <li>Atendimento e relacionamento com clientes e fornecedores</li>
-                            <li>Resolução de problemas operacionais</li>
-                            <li>Organização financeira e contábil</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+const teal = '#38e1b0';
+const amber = '#ffb454';
+const red = '#ff7a7a';
+const violet = '#8ea0ff';
+const panelGrid = 'rgba(255,255,255,0.06)';
 
-    <!-- DIFERENCIAIS -->
-    <section id="differentials" class="differentials">
-        <div class="container">
-            <h2 class="section-title">Diferenciais</h2>
-            <p class="section-subtitle">O que me destaca no mercado</p>
-            
-            <div class="differentials-grid">
-                <div class="differential-item">
-                    <div class="differential-icon">💡</div>
-                    <h3>Forte Conhecimento em Finanças</h3>
-                    <p>Expertise consolidada em gestão financeira e análise econômica</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">📊</div>
-                    <h3>Excel Avançado</h3>
-                    <p>Domínio completo de funções avançadas e criação de dashboards</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">💻</div>
-                    <h3>Habilidades Avançadas em Informática</h3>
-                    <p>Conhecimento técnico em sistemas e ferramentas digitais</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">🔍</div>
-                    <h3>Capacidade Analítica</h3>
-                    <p>Interpretação de dados e extração de insights estratégicos</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">⚡</div>
-                    <h3>Automação de Processos</h3>
-                    <p>Otimização de workflows e redução de atividades manuais</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">🚀</div>
-                    <h3>Facilidade com Tecnologia</h3>
-                    <p>Rápida adaptação e aprendizado de novas ferramentas</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">📋</div>
-                    <h3>Organização</h3>
-                    <p>Planejamento detalhado e gestão eficiente de projetos</p>
-                </div>
-                <div class="differential-item">
-                    <div class="differential-icon">📈</div>
-                    <h3>Decisões Baseadas em Dados</h3>
-                    <p>Abordagem estratégica alinhada com métricas concretas</p>
-                </div>
-            </div>
-        </div>
-    </section>
+const tooltipBase = {
+  backgroundColor:'#0e1420',
+  borderColor:'rgba(255,255,255,0.1)',
+  borderWidth:1,
+  titleFont:{family:"'Space Grotesk', sans-serif", weight:'600'},
+  bodyFont:{family:"'IBM Plex Mono', monospace"},
+  padding:12,
+  displayColors:true,
+};
 
-    <!-- COMPETÊNCIAS PESSOAIS -->
-    <section id="personal-skills" class="personal-skills">
-        <div class="container">
-            <h2 class="section-title">Competências Pessoais</h2>
-            <p class="section-subtitle">Atributos profissionais e pessoais</p>
-            
-            <div class="personal-skills-grid">
-                <div class="personal-skill">
-                    <h4>✓ Honestidade</h4>
-                    <p>Integridade e transparência em todas as ações</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Persistência</h4>
-                    <p>Determinação para alcançar objetivos</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Pontualidade</h4>
-                    <p>Cumprimento de prazos e compromissos</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Comprometimento</h4>
-                    <p>Dedicação integral a projetos e metas</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Responsabilidade</h4>
-                    <p>Autonomia e accountability total</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Sociabilidade</h4>
-                    <p>Facilidade de relacionamento e comunicação</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Proatividade</h4>
-                    <p>Antecipação de problemas e oportunidades</p>
-                </div>
-                <div class="personal-skill">
-                    <h4>✓ Organização</h4>
-                    <p>Metodologia e estrutura em todas as atividades</p>
-                </div>
-            </div>
-        </div>
-    </section>
+/* ---------------- 1. MONTHLY REVENUE ---------------- */
+const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const venda = [292927.00,303204.00,398704.90,286968.00,195813.00,249744.00,168856.99,174569.00,179521.00,316157.00,190647.00,188208.00];
+const servico = [23968.72,21965.36,20780.71,24146.99,28348.60,35241.30,49374.69,21662.59,18728.76,32927.10,41254.11,46939.62];
+const growth = [null,2.61,29.01,-25.83,-27.95,27.13,-23.42,-10.08,1.03,76.08,-33.57,1.40];
+const qtdeVendas = [198,208,227,169,160,138,98,117,116,154,114,115];
+const cmv = [164258.50,172427.00,234708.02,158095.00,98299.50,155995.00,104630.00,102429.00,104891.63,186727.00,107856.64,99530.00];
+const despFixas = [20351.62,19744.77,20683.09,19942.42,21032.80,20004.70,22600.73,18595.92,19993.97,19918.83,19329.65,22199.25];
+const despVar = [0,681.84,299.00,0,0,0,0,1000.00,1000.00,0,500.00,250.00];
 
-    <!-- CONTATO -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Entre em Contato</h2>
-            <p class="section-subtitle">Vamos conversar sobre oportunidades</p>
-            
-            <div class="contact-content">
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <input type="text" id="name" placeholder="Seu Nome" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="email" placeholder="Seu E-mail" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" placeholder="Sua Mensagem" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
-                    </form>
-                </div>
+const monthlyChart = new Chart(document.getElementById('chartMonthly'), {
+  data:{
+    labels:months,
+    datasets:[
+      { type:'bar', label:'Venda de produto', data:venda, backgroundColor:teal, borderRadius:4, stack:'s', order:2 },
+      { type:'bar', label:'Prestação de serviço', data:servico, backgroundColor:'#1c6f57', borderRadius:4, stack:'s', order:2 },
+      { type:'line', label:'Crescimento MoM (%)', data:growth, borderColor:amber, borderDash:[5,4], borderWidth:2,
+        pointBackgroundColor:amber, pointRadius:3, yAxisID:'y1', tension:0.3, order:1, spanGaps:true }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ position:'top', align:'end', labels:{ boxWidth:10, boxHeight:10, usePointStyle:true } },
+      tooltip:{ ...tooltipBase, callbacks:{ label:(ctx)=> ctx.dataset.yAxisID==='y1' ? ' '+ctx.parsed.y+'%' : ' '+fmt(ctx.parsed.y) } }
+    },
+    scales:{
+      x:{ grid:{ display:false } },
+      y:{ stacked:true, grid:{ color:panelGrid }, ticks:{ callback:(v)=> (v/1000)+'k' } },
+      y1:{ position:'right', grid:{ display:false }, ticks:{ callback:(v)=> v+'%' } }
+    }
+  }
+});
 
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>
-                            <h4>Telefone</h4>
-                            <p><a href="tel:+5541999410175">(41) 99941-0175</a></p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div>
-                            <h4>E-mail</h4>
-                            <p><a href="mailto:bottmannbaer@gmail.com">bottmannbaer@gmail.com</a></p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div>
-                            <h4>Localização</h4>
-                            <p>Curitiba - PR</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>
-                            <h4>Instagram</h4>
-                            <p><a href="https://instagram.com/matheusbottmann" target="_blank">@matheusbottmann</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+/* ---------------- FILTER: mês / ano ---------------- */
+const $ = (id)=>document.getElementById(id);
+const selYear = $('selYear'), selMonth = $('selMonth');
 
-    <!-- RODAPÉ -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Matheus Bottmann. Desenvolvido por Matheus Bottmann.</p>
-        </div>
-    </footer>
+function renderSummary(){
+  const mIdx = selMonth.value;
+  const isAll = mIdx === 'all';
 
-    <script src="script.js"></script>
+  const totalVenda = isAll ? venda.reduce((a,b)=>a+b,0) : venda[mIdx];
+  const totalServico = isAll ? servico.reduce((a,b)=>a+b,0) : servico[mIdx];
+  const totalFat = totalVenda + totalServico;
+  const totalQtde = isAll ? qtdeVendas.reduce((a,b)=>a+b,0) : qtdeVendas[mIdx];
+  const totalCmv = isAll ? cmv.reduce((a,b)=>a+b,0) : cmv[mIdx];
+  const totalDespFixas = isAll ? despFixas.reduce((a,b)=>a+b,0) : despFixas[mIdx];
+  const totalDespVar = isAll ? despVar.reduce((a,b)=>a+b,0) : despVar[mIdx];
+  const margemContrib = totalFat - totalCmv;
+  const resultado = margemContrib - totalDespFixas - totalDespVar;
+  const ticket = totalVenda / totalQtde;
+
+  $('kVenda').textContent = fmt(totalVenda);
+  $('kVendaFoot').textContent = totalQtde + ' vendas';
+  $('kServico').textContent = fmt(totalServico);
+  $('kServicoFoot').textContent = ((totalServico/totalFat)*100).toFixed(1).replace('.',',') + '% do total';
+  $('kTicket').textContent = fmt(Math.round(ticket));
+  $('kTicketFoot').textContent = 'por venda';
+  $('kMargem').textContent = ((margemContrib/totalFat)*100).toFixed(2).replace('.',',') + '%';
+  $('kMargemFoot').textContent = fmt(margemContrib) + (isAll ? ' no ano' : ' no mês');
+  $('kCmv').textContent = '-' + fmt(totalCmv);
+  $('kCmvFoot').textContent = ((totalCmv/totalFat)*100).toFixed(1).replace('.',',') + '% do faturamento';
+  const resPct = (resultado/totalFat)*100;
+  $('kResultado').textContent = fmt(resultado);
+  $('kResultado').className = 't-value ' + (resultado >= 0 ? 'teal' : 'amber');
+  $('kResultadoFoot').textContent = resPct.toFixed(1).replace('.',',') + '% de margem líq.';
+
+  $('filterNote').textContent = isAll
+    ? 'Exibindo o ano fiscal completo'
+    : `Exibindo ${months[mIdx]}/${selYear.value}`;
+
+  // Highlight selected month on the revenue chart
+  const highlightBg = months.map((_,i)=> isAll || i==mIdx ? teal : 'rgba(56,225,176,0.18)');
+  const highlightBg2 = months.map((_,i)=> isAll || i==mIdx ? '#1c6f57' : 'rgba(28,111,87,0.18)');
+  monthlyChart.data.datasets[0].backgroundColor = highlightBg;
+  monthlyChart.data.datasets[1].backgroundColor = highlightBg2;
+  monthlyChart.update();
+}
+selMonth.addEventListener('change', renderSummary);
+selYear.addEventListener('change', renderSummary);
+renderSummary();
+
+/* ---------------- 2. REGION MAP ---------------- */
+const regionData = {
+  'Norte':        { value:610790.99, pct:20.74, qty:373 },
+  'Nordeste':     { value:589203.90, pct:20.00, qty:366 },
+  'Centro-Oeste': { value:643620.00, pct:21.85, qty:384 },
+  'Sudeste':      { value:540512.00, pct:18.35, qty:349 },
+  'Sul':          { value:561193.00, pct:19.05, qty:342 },
+};
+const regionPctVals = Object.values(regionData).map(r=>r.pct);
+const pctMin = Math.min(...regionPctVals), pctMax = Math.max(...regionPctVals);
+document.querySelectorAll('.region-tile').forEach(tile=>{
+  const r = tile.dataset.region;
+  const d = regionData[r];
+  const t = (d.pct - pctMin) / (pctMax - pctMin || 1); // 0..1 intensity
+  const alpha = 0.22 + t*0.55;
+  tile.style.background = `rgba(56,225,176,${alpha.toFixed(2)})`;
+  tile.innerHTML = `<div><span class="r-name">${r}</span><span class="r-pct">${fmt(d.value)} · ${d.pct}%</span></div>`;
+  tile.setAttribute('tabindex','0');
+  const showTip = ()=>{
+    document.getElementById('mapTooltip').innerHTML =
+      `<strong>${r}</strong> — ${fmt(d.value)} em vendas de produto (${d.pct}% do total) · ${d.qty} vendas registradas`;
+  };
+  tile.addEventListener('mouseenter', showTip);
+  tile.addEventListener('focus', showTip);
+});
+document.getElementById('mapTooltip').innerHTML = '<span>Passe o mouse sobre uma região para ver o detalhe</span>';
+
+/* ---------------- 3. PAYMENT METHOD ---------------- */
+const payLabels = ['Cartão Débito','Pix','Dinheiro','Cartão Crédito'];
+const payValues = [781990.90,760993.00,722705.99,679630.00];
+const payColors = [teal,'#2bc79a',violet,amber];
+new Chart(document.getElementById('chartPayment'), {
+  type:'doughnut',
+  data:{ labels:payLabels, datasets:[{ data:payValues, backgroundColor:payColors, borderWidth:0, hoverOffset:6 }] },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'68%',
+    plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{ label:(ctx)=>' '+fmt(ctx.parsed) } } }
+  }
+});
+const legendEl = document.getElementById('paymentLegend');
+payLabels.forEach((l,i)=>{
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="swatch" style="background:${payColors[i]}"></span>${l}<span class="amt">${fmt(payValues[i])}</span>`;
+  legendEl.appendChild(li);
+});
+
+/* ---------------- 4. DAY OF WEEK ---------------- */
+new Chart(document.getElementById('chartWeek'), {
+  type:'bar',
+  data:{
+    labels:['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+    datasets:[{
+      data:[398597.00,431987.90,457652.00,467388.00,339368.99,466650.00,383676.00],
+      backgroundColor: ['#1c6f57','#1c6f57','#1c9c78','#38e1b0','#1c6f57','#38e1b0','#1c6f57'],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{ label:(ctx)=>' '+fmt(ctx.parsed.y) } } },
+    scales:{ x:{ grid:{ display:false } }, y:{ grid:{ color:panelGrid }, ticks:{ callback:(v)=>(v/1000)+'k' } } }
+  }
+});
+
+/* ---------------- 5. BRAND MARGIN ---------------- */
+new Chart(document.getElementById('chartBrand'), {
+  type:'bar',
+  data:{
+    labels:['Apple','Samsung','Xiaomi','Motorola'],
+    datasets:[{
+      label:'Margem média (R$)',
+      data:[942.74,408.43,353.65,304.05],
+      backgroundColor:[teal,'#2bc79a','#1c9c78','#177f61'],
+      borderRadius:6,
+      barThickness:34
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{ label:(ctx)=>' '+fmt2(ctx.parsed.y) } } },
+    scales:{ x:{ grid:{ display:false } }, y:{ grid:{ color:panelGrid }, ticks:{ callback:(v)=>'R$ '+v } } }
+  }
+});
+
+/* ---------------- 6. EXPENSES ---------------- */
+new Chart(document.getElementById('chartExpense'), {
+  type:'doughnut',
+  data:{
+    labels:['RH','Marketing','Locação','Simples Nacional','DARF','Condomínio','Honorários Contábeis','Energia Elétrica','Outros'],
+    datasets:[{
+      data:[81000,60000,43587.01,10888.12,10598.50,11375,8259.68,7419.17, 2112.67+1952.88+2750+2295.23+681.84+4909.49+299],
+      backgroundColor:['#38e1b0','#2bc79a','#1c9c78','#177f61','#125f49','#ffb454','#e0954a','#8ea0ff','#4a5670'],
+      borderWidth:0,
+      hoverOffset:6
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'55%',
+    plugins:{
+      legend:{ position:'right', labels:{ boxWidth:10, boxHeight:10, usePointStyle:true, font:{size:11.5} } },
+      tooltip:{...tooltipBase, callbacks:{ label:(ctx)=>' '+fmt(ctx.parsed) } }
+    }
+  }
+});
+
+/* ---------------- TOP MODELS TABLE ---------------- */
+const models = [
+  {name:'iPhone 11', qty:188, revenue:282080.00, margin:759.68},
+  {name:'iPhone 13', qty:111, revenue:311422.00, margin:1099.30},
+  {name:'iPhone 14 Pro Max', qty:48, revenue:204610.00, margin:1302.08},
+  {name:'Galaxy A13', qty:32, revenue:15539.00, margin:254.05},
+  {name:'iPhone 15 Pro Max', qty:21, revenue:113520.00, margin:1467.62},
+];
+const tbody = document.getElementById('modelsBody');
+models.forEach((m,i)=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="name"><span class="rank">${i+1}</span>${m.name}</td>
+    <td class="num">${m.qty}</td>
+    <td class="num">${fmt(m.revenue)}</td>
+    <td class="num">${fmt2(m.margin)}</td>`;
+  tbody.appendChild(tr);
+});
+</script>
 </body>
 </html>
